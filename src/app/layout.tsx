@@ -5,6 +5,9 @@ import { cookies } from "next/headers";
 
 import { TRPCReactProvider } from "~/trpc/react";
 
+// Fix Dynamic server usage: Page couldn't be rendered statically because it used `cookies` at build.
+export const dynamic = 'force-dynamic';
+
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
