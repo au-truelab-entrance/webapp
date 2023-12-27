@@ -1,12 +1,13 @@
-'use client'
+"use client"
 import React, { useState } from 'react';
 import { Button } from '@nextui-org/react';
 import CSVReader from 'react-csv-reader';
+import { api } from '~/trpc/react';
 
 interface CsvData {
-    id: string;
-    start_time: string;
-    end_time: string;
+    studentID: string;
+    startTime: string;
+    endTime: string;
 }
 
 function Dashboard() {
@@ -14,8 +15,18 @@ function Dashboard() {
 
     const handleFileLoaded = (newData: CsvData[]) => {
         setData(newData);
+
+        createStudent.mutate(newData);
     };
 
+
+    const createStudent = api.student.create.useMutation({
+        onSuccess: () => {
+            // setData([]);
+        },
+    });
+
+    // console.log(data);
     return (
         <div className="p-4">
             <div className="mb-3 w-96">
@@ -33,16 +44,18 @@ function Dashboard() {
                 />
 
                 {/* Button to log the loaded data */}
-                {/* <Button
+                <Button
                     color="primary"
                     className="mt-4 w-full"
                     size="lg"
                     onClick={() => {
-                        console.log(data);
+                        // append to database
+                        // console.log(data);
+                        // createPost.mutate(data);
                     }}
                 >
-                    Read
-                </Button> */}
+                    Submit
+                </Button>
             </div>
 
             {/* Render table based on loaded data */}
@@ -53,7 +66,7 @@ function Dashboard() {
                             scope="col"
                             className="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider"
                         >
-                            ID
+                            STUDENT ID
                         </th>
                         <th
                             scope="col"
@@ -72,9 +85,9 @@ function Dashboard() {
                 <tbody className="bg-white divide-y divide-neutral-200">
                     {data.map((item, index) => (
                         <tr key={index}>
-                            <td className="px-6 py-4 whitespace-nowrap">{item.id}</td>
-                            <td className="px-6 py-4 whitespace-nowrap">{item.start_time}</td>
-                            <td className="px-6 py-4 whitespace-nowrap">{item.end_time}</td>
+                            <td className="px-6 py-4 whitespace-nowrap">{item.studentID}</td>
+                            <td className="px-6 py-4 whitespace-nowrap">{item.startTime}</td>
+                            <td className="px-6 py-4 whitespace-nowrap">{item.endTime}</td>
                         </tr>
                     ))}
                 </tbody>
