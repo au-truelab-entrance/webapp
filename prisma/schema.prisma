@@ -6,13 +6,15 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
-  url = env("DATABASE_URL")
+    provider = "mysql"
+    url      = env("DATABASE_URL")
 }
 
 model Student {
-  id           Int      @id @default(autoincrement())
-  studentID    Int      @unique
+    id        Int    @id @default(autoincrement())
+    studentID Int    @unique
+    startTime String
+    endTime   String
 }
 
 model Post {
@@ -64,7 +66,7 @@ model User {
     id            String    @id @default(cuid())
     name          String?
     email         String?   @unique
-    role          String  @default("user")
+    role          String    @default("user")
     emailVerified DateTime?
     image         String?
     accounts      Account[]
