@@ -3,7 +3,6 @@ import {
   protectedProcedure,
 } from "~/server/api/trpc";
 import io from 'socket.io-client';
-import { resolve } from "path";
 
 const SOCKET_SERVER_URL = 'http://localhost:3005';
 
