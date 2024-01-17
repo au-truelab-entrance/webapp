@@ -21,7 +21,6 @@ async function GetAllStudent() {
 async function Dashboard() {
     return (
         <div>
-            <h1>Hello</h1>
             <CSVDashboard />
             <GetAllStudent />
         </div>

@@ -17,6 +17,9 @@ export default function Sidebar() {
                 <Link className={`${pathname === "/dashboard/students" && "bg-white text-primary"} p-2 rounded-xl h-14 flex items-center`} href='/dashboard/students'>
                     Students
                 </Link>
+                <Link className={`${pathname === "/dashboard/analytics" && "bg-white text-primary"} p-2 rounded-xl h-14 flex items-center`} href='/dashboard/analytics'>
+                    Analytics
+                </Link>
             </div>
 
 
