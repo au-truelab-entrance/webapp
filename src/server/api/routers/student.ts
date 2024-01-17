@@ -27,7 +27,6 @@ export const studentRouter = createTRPCRouter({
             return !!student;
         }),
 
-
     create: protectedProcedure
         .input(z.array(z.object({
             studentID: z.string(),
