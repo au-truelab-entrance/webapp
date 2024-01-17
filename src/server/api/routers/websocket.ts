@@ -1,47 +1,40 @@
-import {
-  createTRPCRouter,
-  protectedProcedure,
-} from "~/server/api/trpc";
-import io from 'socket.io-client';
+import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+import io from "socket.io-client";
 
-const SOCKET_SERVER_URL = 'http://localhost:3005';
+const SOCKET_SERVER_URL = "ws://localhost:3005";
 
 export const websocketRouter = createTRPCRouter({
+    greeting: protectedProcedure.query(async () => {
+        const data = "Someone open the door";
 
-  greeting: protectedProcedure.query(async () => {
+        try {
+            const socket = io(SOCKET_SERVER_URL, "echo-protocol");
 
-    const data = "Someone open the door";
+            await new Promise<void>((resolve, reject) => {
+                socket.on("connect", () => {
+                    console.log("Connected to WebSocket server");
+                    resolve();
+                });
 
-    try {
-      const socket = io(SOCKET_SERVER_URL);
+                socket.on("error", (error) => {
+                    console.error("WebSocket connection error:", error);
+                    reject(error);
+                });
+            });
+            const jsonData = { message: data };
+            socket.emit("message", JSON.stringify(jsonData));
 
-      await new Promise<void>((resolve, reject) => {
-        socket.on("connect", () => {
-          console.log('Connected to WebSocket server')
-          resolve();
-        })
+            // const response: string = await new Promise<string>((resolve) => {
+            //   socket.on('message', (responseData: string) => {
+            //     console.log('Received message from WebSocket server:', responseData);
+            //     resolve(responseData)
+            //   });
+            // })
 
-        socket.on("error", (error) => {
-          console.error('WebSocket connection error:', error)
-          reject(error);
-        })
-      })
-      const jsonData = { message: data };
-      socket.emit('message', JSON.stringify(jsonData));
-
-      // const response: string = await new Promise<string>((resolve) => {
-      //   socket.on('message', (responseData: string) => {
-      //     console.log('Received message from WebSocket server:', responseData);
-      //     resolve(responseData)
-      //   });
-      // })
-      
-      return data
-
-    } catch (error) {
-      console.error('WebSocket operation failed:', error);
-      throw error;
-    }
-  }),
-
-})
+            return data;
+        } catch (error) {
+            console.error("WebSocket operation failed:", error);
+            throw error;
+        }
+    }),
+});
