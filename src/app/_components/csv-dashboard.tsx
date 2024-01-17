@@ -57,7 +57,6 @@ function CSVDashboard() {
             </div>
 
             {/* Render table based on loaded data */}
-
         </div>
     );
 }

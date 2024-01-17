@@ -3,8 +3,6 @@ import { getServerAuthSession } from "~/server/auth";
 import { api } from "~/trpc/server";
 import StudentTable from "./students-table";
 
-
-
 export default async function Students() {
     const session = await getServerAuthSession();
     if (!session?.user) return null;
