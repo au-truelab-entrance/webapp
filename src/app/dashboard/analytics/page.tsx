@@ -56,7 +56,7 @@ export default function Home() {
     return (
         <Chart
             chartType="Line"
-            width="99%"
+            width="100%"
             height="550px"
             data={data}
             options={options}

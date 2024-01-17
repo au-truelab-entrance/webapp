@@ -13,6 +13,8 @@ import {
     getKeyValue,
 } from "@nextui-org/react";
 import { MdOutlineEdit, MdDeleteOutline } from "react-icons/md";
+import { api } from "~/trpc/react";
+import { useRouter } from "next/navigation";
 
 const columns = [
     { name: "STUDENT ID", uid: "studentID" },
@@ -22,21 +24,18 @@ const columns = [
 ];
 
 export default function StudentTable({ students }: { students: any }) {
-    const renderCell = React.useCallback((user: any, columnKey: any) => {
-        const cellValue = user[columnKey];
+    const router = useRouter();
+
+    const deleteStudent = api.student.deleteById.useMutation({
+        onSuccess: () => {
+            router.refresh();
+        },
+    });
+
+    const renderCell = React.useCallback((student: any, columnKey: any) => {
+        const cellValue = student[columnKey];
 
         switch (columnKey) {
-            case "role":
-                return (
-                    <div className="flex flex-col">
-                        <p className="text-bold text-sm capitalize">
-                            {cellValue}
-                        </p>
-                        <p className="text-bold text-sm capitalize text-default-400">
-                            {user.team}
-                        </p>
-                    </div>
-                );
             case "actions":
                 return (
                     <div className="relative flex items-center gap-2">
@@ -46,7 +45,12 @@ export default function StudentTable({ students }: { students: any }) {
                             </span>
                         </Tooltip>
                         <Tooltip color="danger" content="Delete user">
-                            <span className="cursor-pointer text-lg text-danger active:opacity-50">
+                            <span
+                                className="cursor-pointer text-lg text-danger active:opacity-50"
+                                onClick={() =>
+                                    deleteStudent.mutate(student.studentID)
+                                }
+                            >
                                 <MdDeleteOutline />
                             </span>
                         </Tooltip>

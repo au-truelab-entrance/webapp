@@ -29,6 +29,25 @@ export const studentRouter = createTRPCRouter({
         return await ctx.db.student.findMany();
     }),
 
+    deleteById: protectedProcedure
+        .input(z.number())
+        .mutation(async ({ ctx, input }) => {
+            try {
+                const deletedStudent = await ctx.db.student.delete({
+                    where: {
+                        studentID: input,
+                    },
+                });
+
+                console.log("Student deleted successfully:", deletedStudent);
+
+                return deletedStudent;
+            } catch (error) {
+                console.error("Error deleting student:", error);
+                throw new Error("Error deleting student");
+            }
+        }),
+
     create: protectedProcedure
         .input(
             z.array(
