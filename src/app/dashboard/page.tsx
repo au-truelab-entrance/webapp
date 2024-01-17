@@ -21,8 +21,9 @@ async function GetAllStudent() {
 async function Dashboard() {
     return (
         <div>
-            <CSVDashboard />
-            <GetAllStudent />
+            Dashboard
+            {/* <CSVDashboard />
+            <GetAllStudent /> */}
         </div>
     );
 }

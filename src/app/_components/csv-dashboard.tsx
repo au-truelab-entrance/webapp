@@ -21,7 +21,7 @@ function CSVDashboard() {
 
     const createStudent = api.student.create.useMutation({
         onSuccess: () => {
-            // setData([])
+            window.location.reload();
         },
     });
 
@@ -57,45 +57,7 @@ function CSVDashboard() {
             </div>
 
             {/* Render table based on loaded data */}
-            <table className="min-w-full divide-y divide-neutral-200">
-                <thead className="bg-neutral-50">
-                    <tr>
-                        <th
-                            scope="col"
-                            className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-neutral-500"
-                        >
-                            STUDENT ID
-                        </th>
-                        <th
-                            scope="col"
-                            className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-neutral-500"
-                        >
-                            START
-                        </th>
-                        <th
-                            scope="col"
-                            className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-neutral-500"
-                        >
-                            END
-                        </th>
-                    </tr>
-                </thead>
-                <tbody className="divide-y divide-neutral-200 bg-white">
-                    {data.map((item, index) => (
-                        <tr key={index}>
-                            <td className="whitespace-nowrap px-6 py-4">
-                                {item.studentID}
-                            </td>
-                            <td className="whitespace-nowrap px-6 py-4">
-                                {item.startTime}
-                            </td>
-                            <td className="whitespace-nowrap px-6 py-4">
-                                {item.endTime}
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+
         </div>
     );
 }
