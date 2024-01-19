@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Button } from "@nextui-org/react";
+import { Button, Checkbox, Input, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@nextui-org/react";
 import CSVReader from "react-csv-reader";
 import { api } from "~/trpc/react";
 import { useRouter } from "next/navigation";
@@ -14,10 +14,14 @@ interface CsvData {
 function CSVDashboard() {
     const router = useRouter();
     const [data, setData] = useState<CsvData[]>([]);
+    const [studentID, setStudentID] = useState('');
+    const [startTime, setStartTime] = useState('');
+    const [endTime, setEndTime] = useState('');
 
 
     const handleFileLoaded = (newData: CsvData[]) => {
         setData(newData);
+        createStudent.mutate(newData);
     };
 
     const createStudent = api.student.create.useMutation({
@@ -26,36 +30,84 @@ function CSVDashboard() {
         },
     });
 
-    return (
-        <div className="p-4">
-            <div className="mb-3 w-96">
-                <label
-                    htmlFor="formFile"
-                    className="mb-2 inline-block text-neutral-700 dark:text-neutral-200"
-                >
-                    CSV
-                </label>
+    const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
-                {/* Use CSVReader component to handle file input */}
+    const handleInsert = () => {
+
+        createStudent.mutate([
+            {
+                studentID: studentID,
+                startTime: startTime,
+                endTime: endTime
+            }
+        ]);
+    }
+
+    return (
+        <div className="">
+            <h1 className="text-4xl font-bold">Students</h1>
+            <div className="flex items-center my-6">
+                <Button color="primary" className="w-80" onPress={onOpen}>Insert Students</Button>
+                <h1 className="mx-4">or</h1>
                 <CSVReader
                     parserOptions={{ header: true }}
                     onFileLoaded={handleFileLoaded}
                 />
-
-                {/* Button to log the loaded data */}
-                <Button
-                    color="primary"
-                    className="mt-4 w-full"
-                    size="lg"
-                    onClick={() => {
-                        createStudent.mutate(data);
-                    }}
-                >
-                    Submit
-                </Button>
             </div>
+            <Modal
+                isOpen={isOpen}
+                onOpenChange={onOpenChange}
+                placement="top-center"
+            >
+                <ModalContent>
+                    {(onClose) => (
+                        <>
+                            <ModalHeader className="flex flex-col gap-1">Insert Student</ModalHeader>
+                            <ModalBody>
+                                <Input
+                                    autoFocus
+                                    label="Student ID"
+                                    placeholder="*******"
+                                    variant="bordered"
+                                    type="number"
+                                    value={studentID}
+                                    onValueChange={setStudentID}
+                                />
+                                <div className="flex gap-4">
+                                    <div className="gap-1 w-full">
+                                        <p>Start Time</p>
+                                        <Input
+                                            type="time"
+                                            variant="bordered"
+                                            value={startTime}
+                                            onValueChange={setStartTime}
+                                        />
+                                    </div>
+                                    <div className="gap-1 w-full">
+                                        <p>End Time</p>
+                                        <Input
+                                            type="time"
+                                            variant="bordered"
+                                            value={endTime}
+                                            onValueChange={setEndTime}
+                                        />
+                                    </div>
+                                </div>
 
-            {/* Render table based on loaded data */}
+                            </ModalBody>
+                            <ModalFooter>
+                                <Button color="danger" variant="flat" onPress={onClose}>
+                                    Close
+                                </Button>
+                                <Button color="primary" onPress={onClose} onClick={() => handleInsert()}>
+                                    Insert
+                                </Button>
+                            </ModalFooter>
+                        </>
+                    )}
+                </ModalContent>
+            </Modal>
+
         </div>
     );
 }
