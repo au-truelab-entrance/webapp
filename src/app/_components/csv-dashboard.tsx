@@ -15,8 +15,6 @@ function CSVDashboard() {
 
     const handleFileLoaded = (newData: CsvData[]) => {
         setData(newData);
-
-        createStudent.mutate(newData);
     };
 
     const createStudent = api.student.create.useMutation({
@@ -47,9 +45,7 @@ function CSVDashboard() {
                     className="mt-4 w-full"
                     size="lg"
                     onClick={() => {
-                        // append to database
-                        // console.log(data);
-                        // createPost.mutate(data);
+                        createStudent.mutate(data);
                     }}
                 >
                     Submit
