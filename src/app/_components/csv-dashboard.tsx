@@ -4,6 +4,8 @@ import { Button, Checkbox, Input, Link, Modal, ModalBody, ModalContent, ModalFoo
 import CSVReader from "react-csv-reader";
 import { api } from "~/trpc/react";
 import { useRouter } from "next/navigation";
+import { Bounce, ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface CsvData {
     studentID: string;
@@ -27,7 +29,11 @@ function CSVDashboard() {
     const createStudent = api.student.create.useMutation({
         onSuccess: () => {
             router.refresh();
+            toast.success("Students Inserted Successfully");
         },
+        onError: (error) => {
+            toast.error(error.message);
+        }
     });
 
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -107,6 +113,19 @@ function CSVDashboard() {
                     )}
                 </ModalContent>
             </Modal>
+            <ToastContainer
+                position="bottom-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+                transition={Bounce}
+            />
 
         </div>
     );
