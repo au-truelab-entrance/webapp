@@ -19,6 +19,8 @@ import {
 import { MdOutlineEdit, MdDeleteOutline } from "react-icons/md";
 import { api } from "~/trpc/react";
 import { useRouter } from "next/navigation";
+import { Bounce, ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const columns = [
     { name: "STUDENT ID", uid: "studentID" },
@@ -37,6 +39,7 @@ export default function StudentTable({ students }: { students: any }) {
     const deleteStudent = api.student.deleteById.useMutation({
         onSuccess: () => {
             router.refresh();
+            toast.success("Student Deleted Successfully");
         },
     });
 
@@ -50,7 +53,11 @@ export default function StudentTable({ students }: { students: any }) {
     const updateStudent = api.student.update.useMutation({
         onSuccess: () => {
             router.refresh();
+            toast.success("Student Updated Successfully");
         },
+        onError: (error) => {
+            toast.error(error.message);
+        }
     });
 
     const handleUpdate = () => {
@@ -152,6 +159,8 @@ export default function StudentTable({ students }: { students: any }) {
                     )}
                 </ModalContent>
             </Modal>
+
+
         </div>
     );
 }
