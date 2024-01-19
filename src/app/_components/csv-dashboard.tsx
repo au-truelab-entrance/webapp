@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Button } from "@nextui-org/react";
 import CSVReader from "react-csv-reader";
 import { api } from "~/trpc/react";
+import { useRouter } from "next/navigation";
 
 interface CsvData {
     studentID: string;
@@ -11,17 +12,17 @@ interface CsvData {
 }
 
 function CSVDashboard() {
+    const router = useRouter();
     const [data, setData] = useState<CsvData[]>([]);
+
 
     const handleFileLoaded = (newData: CsvData[]) => {
         setData(newData);
-
-        createStudent.mutate(newData);
     };
 
     const createStudent = api.student.create.useMutation({
         onSuccess: () => {
-            window.location.reload();
+            router.refresh();
         },
     });
 
@@ -47,9 +48,7 @@ function CSVDashboard() {
                     className="mt-4 w-full"
                     size="lg"
                     onClick={() => {
-                        // append to database
-                        // console.log(data);
-                        // createPost.mutate(data);
+                        createStudent.mutate(data);
                     }}
                 >
                     Submit
