@@ -1,9 +1,10 @@
 "use client";
+
 import React from "react";
 import { Chart } from "react-google-charts";
 
 type GraphData = [
-    string,
+    Date | string,
     number | string,
     number | string,
     number | string,
@@ -27,9 +28,6 @@ function generateGraph(): GraphData {
 
     while (currentTime <= endDate) {
         const formatTime = new Date(currentTime)
-            .toString()
-            .split(" ")[4]
-            ?.slice(0, 5);
         if (formatTime) {
             dataForGraph.push([
                 formatTime,
@@ -57,7 +55,7 @@ export default function Home() {
         <Chart
             chartType="Line"
             width="100%"
-            height="550px"
+            height="90%"
             data={data}
             options={options}
         />

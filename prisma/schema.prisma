@@ -10,6 +10,16 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
+model Analytics {
+    id        Int    @id @default(autoincrement())
+    createdAt DateTime
+    Time      String
+    Year1     Int
+    Year2     Int
+    Year3     Int
+    Year4     Int
+}
+
 model Student {
     id        Int    @id @default(autoincrement())
     studentID Int    @unique

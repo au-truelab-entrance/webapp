@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState } from "react";
 import { Button } from "@nextui-org/react";
 import CSVReader from "react-csv-reader";
@@ -18,12 +19,16 @@ function CSVDashboard() {
 
     const handleFileLoaded = (newData: CsvData[]) => {
         setData(newData);
+        createStudent.mutate(newData);
     };
 
     const createStudent = api.student.create.useMutation({
         onSuccess: () => {
             router.refresh();
         },
+        onError: () => {
+            // console.log(error);
+        }
     });
 
     return (
