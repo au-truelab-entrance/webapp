@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState } from "react";
 import { Button, Checkbox, Input, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@nextui-org/react";
 import CSVReader from "react-csv-reader";
@@ -33,6 +34,7 @@ function CSVDashboard() {
         },
         onError: (error) => {
             toast.error(error.message);
+
         }
     });
 

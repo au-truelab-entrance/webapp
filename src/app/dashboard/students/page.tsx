@@ -8,7 +8,6 @@ export default async function Students() {
     if (!session?.user) return null;
 
     const students = await api.student.getAll.query();
-    console.log(students);
 
     return (
         <div className="w-full p-6">

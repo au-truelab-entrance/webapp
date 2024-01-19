@@ -1,6 +1,3 @@
-import PopularGraph from "~/app/_components/popular-graph";
-import { api } from "~/trpc/server";
-
 type GraphData = [
     Date | string,
     number | string,
@@ -40,16 +37,7 @@ function generateGraph(): GraphData {
     return dataForGraph;
 }
 
-console.log(generateGraph())
-// const seedDate = api.analytics.seedData.mutate(generateGraph())
+function main() {
 
-
-export default function Home() {
-    // console.log({...generateGraph()})
-
-    return (
-        <>
-            <PopularGraph />
-        </>
-    )
 }
+main()

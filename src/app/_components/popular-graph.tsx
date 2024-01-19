@@ -1,5 +1,7 @@
-import PopularGraph from "~/app/_components/popular-graph";
-import { api } from "~/trpc/server";
+"use client";
+
+import React from "react";
+import { Chart } from "react-google-charts";
 
 type GraphData = [
     Date | string,
@@ -40,16 +42,22 @@ function generateGraph(): GraphData {
     return dataForGraph;
 }
 
-console.log(generateGraph())
-// const seedDate = api.analytics.seedData.mutate(generateGraph())
+export const data = generateGraph();
 
+export const options = {
+    chart: {
+        title: "Popular time",
+    },
+};
 
-export default function Home() {
-    // console.log({...generateGraph()})
-
+export default function PopularGraph() {
     return (
-        <>
-            <PopularGraph />
-        </>
-    )
+        <Chart
+            chartType="Line"
+            width="100%"
+            height="90%"
+            data={data}
+            options={options}
+        />
+    );
 }
