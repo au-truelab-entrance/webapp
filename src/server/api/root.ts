@@ -2,6 +2,7 @@ import { postRouter } from "~/server/api/routers/post";
 import { createTRPCRouter } from "~/server/api/trpc";
 
 import { studentRouter } from "~/server/api/routers/student";
+import { analyticsRouter } from "~/server/api/routers/analytics";
 import { websocketRouter } from "./routers/websocket";
 
 /**
@@ -12,6 +13,7 @@ import { websocketRouter } from "./routers/websocket";
 export const appRouter = createTRPCRouter({
     post: postRouter,
     student: studentRouter,
+    analytics: analyticsRouter,
     websocket: websocketRouter,
 });
 

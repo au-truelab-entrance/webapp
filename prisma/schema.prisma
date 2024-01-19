@@ -13,11 +13,11 @@ datasource db {
 model Analytics {
     id        Int    @id @default(autoincrement())
     createdAt DateTime
-    Time      String
-    Year1     Int
-    Year2     Int
-    Year3     Int
-    Year4     Int
+    time      String
+    year1     Int
+    year2     Int
+    year3     Int
+    year4     Int
 }
 
 model Student {
