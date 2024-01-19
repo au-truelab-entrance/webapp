@@ -13,7 +13,6 @@ datasource db {
 model Analytics {
     id        Int    @id @default(autoincrement())
     createdAt DateTime
-    time      String
     year1     Int
     year2     Int
     year3     Int

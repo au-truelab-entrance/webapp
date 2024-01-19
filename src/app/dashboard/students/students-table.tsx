@@ -19,8 +19,9 @@ import {
 import { MdOutlineEdit, MdDeleteOutline } from "react-icons/md";
 import { api } from "~/trpc/react";
 import { useRouter } from "next/navigation";
-import { Bounce, ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Student } from "~/app/lib/definitions";
 
 const columns = [
     { name: "STUDENT ID", uid: "studentID" },
@@ -29,7 +30,8 @@ const columns = [
     { name: "ACTIONS", uid: "actions" },
 ];
 
-export default function StudentTable({ students }: { students: any }) {
+
+export default function StudentTable({ students }: { students: Student[] }) {
     const router = useRouter();
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const [studentID, setStudentID] = useState(0);
@@ -43,7 +45,7 @@ export default function StudentTable({ students }: { students: any }) {
         },
     });
 
-    const handleEdit = (student: any) => {
+    const handleEdit = (student: Student) => {
         setStudentID(student.studentID);
         setStartTime(student.startTime);
         setEndTime(student.endTime);
@@ -67,31 +69,31 @@ export default function StudentTable({ students }: { students: any }) {
             endTime
         })
     }
-
-    const renderCell = React.useCallback((student: any, columnKey: any) => {
-        const cellValue = student[columnKey];
-
+    const renderCell = React.useCallback((student: Student, columnKey: keyof Student | "actions") => {
+        const actionsColumn = (
+            <div className="relative flex items-center gap-2">
+                <span className="cursor-pointer text-lg text-default-400 active:opacity-50" onClick={() => handleEdit(student)}>
+                    <MdOutlineEdit />
+                </span>
+                <span
+                    className="cursor-pointer text-lg text-danger active:opacity-50"
+                    onClick={() => deleteStudent.mutate(student.studentID)}
+                >
+                    <MdDeleteOutline />
+                </span>
+            </div>
+        );
+    
         switch (columnKey) {
             case "actions":
-                return (
-                    <div className="relative flex items-center gap-2">
-                        <span className="cursor-pointer text-lg text-default-400 active:opacity-50" onClick={() => handleEdit(student)}>
-                            <MdOutlineEdit />
-                        </span>
-                        <span
-                            className="cursor-pointer text-lg text-danger active:opacity-50"
-                            onClick={() =>
-                                deleteStudent.mutate(student.studentID)
-                            }
-                        >
-                            <MdDeleteOutline />
-                        </span>
-                    </div>
-                );
+                return actionsColumn;
             default:
+                const cellValue = student[columnKey];
                 return cellValue;
         }
-    }, []);
+    }, [handleEdit, deleteStudent]);
+    
+    
 
     return (
         <div className="">
@@ -108,10 +110,10 @@ export default function StudentTable({ students }: { students: any }) {
                     )}
                 </TableHeader>
                 <TableBody items={students}>
-                    {(item) => (
-                        <TableRow key={students.id}>
-                            {(columnKey) => (
-                                <TableCell>{renderCell(item, columnKey)}</TableCell>
+                    {(student) => (
+                        <TableRow key={student.id}>
+                            {(columnKey: keyof Student | "actions") => (
+                                <TableCell>{renderCell(student, columnKey)}</TableCell>
                             )}
                         </TableRow>
                     )}

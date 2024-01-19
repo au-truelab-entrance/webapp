@@ -1,32 +1,30 @@
 "use client";
 
 import React, { useState } from "react";
-import { Button, Checkbox, Input, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@nextui-org/react";
+import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@nextui-org/react";
 import CSVReader from "react-csv-reader";
 import { api } from "~/trpc/react";
 import { useRouter } from "next/navigation";
 import { Bounce, ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
-interface CsvData {
-    studentID: string;
-    startTime: string;
-    endTime: string;
-}
+import { Student } from "../lib/definitions";
 
 function CSVDashboard() {
     const router = useRouter();
-    const [data, setData] = useState<CsvData[]>([]);
     const [studentID, setStudentID] = useState('');
     const [startTime, setStartTime] = useState('');
     const [endTime, setEndTime] = useState('');
 
-
-    const handleFileLoaded = (newData: CsvData[]) => {
-        setData(newData);
-        createStudent.mutate(newData);
+    const handleFileLoaded = (newData: Student[]) => {
+        const convertedStudentData: Student[] = newData.map(student => ({
+            studentID: Number(student.studentID),
+            startTime: student.startTime,
+            endTime: student.endTime
+        }));
+        createStudent.mutate(convertedStudentData);
     };
 
+    console.log(studentID)
     const createStudent = api.student.create.useMutation({
         onSuccess: () => {
             router.refresh();
@@ -41,10 +39,9 @@ function CSVDashboard() {
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
     const handleInsert = () => {
-
         createStudent.mutate([
             {
-                studentID: studentID,
+                studentID: parseInt(studentID, 10),
                 startTime: startTime,
                 endTime: endTime
             }

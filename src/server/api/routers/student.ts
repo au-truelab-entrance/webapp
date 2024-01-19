@@ -82,7 +82,7 @@ export const studentRouter = createTRPCRouter({
         .input(
             z.array(
                 z.object({
-                    studentID: z.string(),
+                    studentID: z.number(),
                     startTime: z.string(),
                     endTime: z.string(),
                 }),
@@ -90,17 +90,11 @@ export const studentRouter = createTRPCRouter({
         )
         .mutation(async ({ ctx, input }) => {
             try {
-                console.log(input);
-
-                // Use Promise.all to wait for all student creations to complete
                 const createdStudents = await Promise.all(
                     input.map(async (item) => {
-                        // console.log(item.studentID);
-                        // console.log(item.startTime);
-                        // console.log(item.endTime);
                         return ctx.db.student.create({
                             data: {
-                                studentID: parseInt(item.studentID, 10),
+                                studentID: item.studentID,
                                 startTime: item.startTime,
                                 endTime: item.endTime,
                             },

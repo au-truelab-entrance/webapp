@@ -14,9 +14,10 @@ function generateGraph(): GraphData {
         return Math.floor(Math.random() * max);
     }
 
-    const dataForGraph: GraphData = [
-        ["Time", "Year 1", "Year 2", "Year 3", "Year 4"],
-    ];
+    // const dataForGraph: GraphData = [
+    //     ["Time", "Year 1", "Year 2", "Year 3", "Year 4"],
+    // ];
+    const dataForGraph: GraphData = [];
     const startDate: Date = new Date();
     startDate.setHours(9, 0, 0, 0);
 
@@ -40,7 +41,6 @@ function generateGraph(): GraphData {
     return dataForGraph;
 }
 
-console.log(generateGraph())
 // const seedDate = api.analytics.seedData.mutate(generateGraph())
 
 
