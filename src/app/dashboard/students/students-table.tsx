@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import {
     Table,
     TableHeader,
@@ -7,10 +7,14 @@ import {
     TableBody,
     TableRow,
     TableCell,
-    User,
-    Chip,
-    Tooltip,
-    getKeyValue,
+    Modal,
+    ModalContent,
+    ModalHeader,
+    ModalBody,
+    Input,
+    ModalFooter,
+    Button,
+    useDisclosure,
 } from "@nextui-org/react";
 import { MdOutlineEdit, MdDeleteOutline } from "react-icons/md";
 import { api } from "~/trpc/react";
@@ -25,12 +29,37 @@ const columns = [
 
 export default function StudentTable({ students }: { students: any }) {
     const router = useRouter();
+    const { isOpen, onOpen, onOpenChange } = useDisclosure();
+    const [studentID, setStudentID] = useState(0);
+    const [startTime, setStartTime] = useState('');
+    const [endTime, setEndTime] = useState('');
 
     const deleteStudent = api.student.deleteById.useMutation({
         onSuccess: () => {
             router.refresh();
         },
     });
+
+    const handleEdit = (student: any) => {
+        setStudentID(student.studentID);
+        setStartTime(student.startTime);
+        setEndTime(student.endTime);
+        onOpen()
+    }
+
+    const updateStudent = api.student.update.useMutation({
+        onSuccess: () => {
+            router.refresh();
+        },
+    });
+
+    const handleUpdate = () => {
+        updateStudent.mutate({
+            studentID,
+            startTime,
+            endTime
+        })
+    }
 
     const renderCell = React.useCallback((student: any, columnKey: any) => {
         const cellValue = student[columnKey];
@@ -39,21 +68,17 @@ export default function StudentTable({ students }: { students: any }) {
             case "actions":
                 return (
                     <div className="relative flex items-center gap-2">
-                        <Tooltip content="Edit user">
-                            <span className="cursor-pointer text-lg text-default-400 active:opacity-50">
-                                <MdOutlineEdit />
-                            </span>
-                        </Tooltip>
-                        <Tooltip color="danger" content="Delete user">
-                            <span
-                                className="cursor-pointer text-lg text-danger active:opacity-50"
-                                onClick={() =>
-                                    deleteStudent.mutate(student.studentID)
-                                }
-                            >
-                                <MdDeleteOutline />
-                            </span>
-                        </Tooltip>
+                        <span className="cursor-pointer text-lg text-default-400 active:opacity-50" onClick={() => handleEdit(student)}>
+                            <MdOutlineEdit />
+                        </span>
+                        <span
+                            className="cursor-pointer text-lg text-danger active:opacity-50"
+                            onClick={() =>
+                                deleteStudent.mutate(student.studentID)
+                            }
+                        >
+                            <MdDeleteOutline />
+                        </span>
                     </div>
                 );
             default:
@@ -62,26 +87,71 @@ export default function StudentTable({ students }: { students: any }) {
     }, []);
 
     return (
-        <Table aria-label="Example table with custom cells" className="">
-            <TableHeader columns={columns}>
-                {(column) => (
-                    <TableColumn
-                        key={column.uid}
-                        align={column.uid === "actions" ? "center" : "start"}
-                    >
-                        {column.name}
-                    </TableColumn>
-                )}
-            </TableHeader>
-            <TableBody items={students}>
-                {(item) => (
-                    <TableRow key={students.id}>
-                        {(columnKey) => (
-                            <TableCell>{renderCell(item, columnKey)}</TableCell>
-                        )}
-                    </TableRow>
-                )}
-            </TableBody>
-        </Table>
+        <div className="">
+
+            <Table aria-label="Example table with custom cells" className="">
+                <TableHeader columns={columns}>
+                    {(column) => (
+                        <TableColumn
+                            key={column.uid}
+                            align={column.uid === "actions" ? "center" : "start"}
+                        >
+                            {column.name}
+                        </TableColumn>
+                    )}
+                </TableHeader>
+                <TableBody items={students}>
+                    {(item) => (
+                        <TableRow key={students.id}>
+                            {(columnKey) => (
+                                <TableCell>{renderCell(item, columnKey)}</TableCell>
+                            )}
+                        </TableRow>
+                    )}
+                </TableBody>
+            </Table>
+            <Modal
+                isOpen={isOpen}
+                onOpenChange={onOpenChange}
+                placement="top-center"
+            >
+                <ModalContent>
+                    {(onClose) => (
+                        <>
+                            <ModalHeader className="flex flex-col gap-1">Edit Student</ModalHeader>
+                            <ModalBody>
+                                <div className="grid gap-1">
+                                    <p>Start Time</p>
+                                    <Input
+                                        type="time"
+                                        variant="bordered"
+                                        value={startTime}
+                                        onValueChange={setStartTime}
+                                    />
+                                </div>
+                                <div className="grid gap-1">
+                                    <p>End Time</p>
+                                    <Input
+                                        type="time"
+                                        variant="bordered"
+                                        value={endTime}
+                                        onValueChange={setEndTime}
+                                    />
+                                </div>
+
+                            </ModalBody>
+                            <ModalFooter>
+                                <Button color="danger" variant="flat" onPress={onClose}>
+                                    Close
+                                </Button>
+                                <Button color="primary" onPress={onClose} onClick={() => handleUpdate()}>
+                                    Update
+                                </Button>
+                            </ModalFooter>
+                        </>
+                    )}
+                </ModalContent>
+            </Modal>
+        </div>
     );
 }

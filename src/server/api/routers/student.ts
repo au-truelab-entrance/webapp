@@ -29,6 +29,36 @@ export const studentRouter = createTRPCRouter({
         return await ctx.db.student.findMany();
     }),
 
+    update: protectedProcedure
+        .input(
+            z.object({
+                studentID: z.number(),
+                startTime: z.string(),
+                endTime: z.string(),
+            }),
+        )
+        .mutation(async ({ ctx, input }) => {
+            try {
+                const updatedStudent = await ctx.db.student.update({
+                    where: {
+                        studentID: input.studentID,
+                    },
+                    data: {
+
+                        startTime: input.startTime,
+                        endTime: input.endTime,
+                    },
+                });
+
+                console.log("Student updated successfully:", updatedStudent);
+
+                return updatedStudent;
+            } catch (error) {
+                console.error("Error updating student:", error);
+                throw new Error("Error updating student");
+            }
+        }),
+
     deleteById: protectedProcedure
         .input(z.number())
         .mutation(async ({ ctx, input }) => {
