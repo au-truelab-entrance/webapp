@@ -1,5 +1,7 @@
 import PopularGraph from "~/app/_components/popular-graph";
 import { api } from "~/trpc/server";
+import type { HeatMap } from "~/app/lib/definitions";
+import TopTenTable from "~/app/_components/top-ten-table";
 
 type GraphData = [
     Date | string,
@@ -7,9 +9,9 @@ type GraphData = [
     number | string,
     number | string,
     number | string,
-][];
+];
 
-function generateGraph(): GraphData {
+function generateGraph(): GraphData[] {
     function getRandomInt(max: number): number {
         return Math.floor(Math.random() * max);
     }
@@ -17,16 +19,24 @@ function generateGraph(): GraphData {
     // const dataForGraph: GraphData = [
     //     ["Time", "Year 1", "Year 2", "Year 3", "Year 4"],
     // ];
-    const dataForGraph: GraphData = [];
-    const startDate: Date = new Date();
+
+    const dataForGraph: GraphData[] = [];
+
+    function randomDate(start: Date, end: Date) {
+        return new Date(
+            start.getTime() + Math.random() * (end.getTime() - start.getTime()),
+        );
+    }
+
+    const startDate: Date = randomDate(new Date(2023, 0, 1), new Date());
     startDate.setHours(9, 0, 0, 0);
 
-    const endDate: Date = new Date();
+    const endDate: Date = randomDate(new Date(2023, 0, 1), new Date());
     endDate.setHours(20, 30, 0, 0);
     const currentTime: Date = new Date(startDate);
 
     while (currentTime <= endDate) {
-        const formatTime = new Date(currentTime)
+        const formatTime = new Date(currentTime);
         if (formatTime) {
             dataForGraph.push([
                 formatTime,
@@ -43,13 +53,24 @@ function generateGraph(): GraphData {
 
 // const seedDate = api.analytics.seedData.mutate(generateGraph())
 
+const fixFormat = async () => {
+    const validDataFormat: HeatMap[] = [["Time", "Data"]];
+    const data = await api.analytics.getData.query();
+    data.map((each) => {
+        validDataFormat.push([
+            new Date(each.createdAt),
+            each.year1 + each.year2 + each.year3 + each.year4,
+        ]);
+    });
 
-export default function Home() {
-    // console.log({...generateGraph()})
+    return validDataFormat;
+};
 
+export default async function Home() {
     return (
         <>
-            <PopularGraph />
+            <PopularGraph data={await fixFormat()} />
+            <TopTenTable />
         </>
-    )
+    );
 }

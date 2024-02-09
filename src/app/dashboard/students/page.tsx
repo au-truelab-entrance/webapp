@@ -2,7 +2,7 @@ import CSVDashboard from "../../_components/csv-dashboard";
 import { getServerAuthSession } from "~/server/auth";
 import { api } from "~/trpc/server";
 import StudentTable from "./students-table";
-import { Student } from "~/app/lib/definitions";
+import type { Student } from "~/app/lib/definitions";
 
 export default async function Students() {
     const session = await getServerAuthSession();

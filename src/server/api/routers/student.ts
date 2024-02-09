@@ -44,7 +44,6 @@ export const studentRouter = createTRPCRouter({
                         studentID: input.studentID,
                     },
                     data: {
-
                         startTime: input.startTime,
                         endTime: input.endTime,
                     },

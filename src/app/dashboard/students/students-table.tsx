@@ -19,9 +19,9 @@ import {
 import { MdOutlineEdit, MdDeleteOutline } from "react-icons/md";
 import { api } from "~/trpc/react";
 import { useRouter } from "next/navigation";
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { Student } from "~/app/lib/definitions";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import type { Student } from "~/app/lib/definitions";
 
 const columns = [
     { name: "STUDENT ID", uid: "studentID" },
@@ -30,13 +30,12 @@ const columns = [
     { name: "ACTIONS", uid: "actions" },
 ];
 
-
 export default function StudentTable({ students }: { students: Student[] }) {
     const router = useRouter();
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const [studentID, setStudentID] = useState(0);
-    const [startTime, setStartTime] = useState('');
-    const [endTime, setEndTime] = useState('');
+    const [startTime, setStartTime] = useState("");
+    const [endTime, setEndTime] = useState("");
 
     const deleteStudent = api.student.deleteById.useMutation({
         onSuccess: () => {
@@ -49,8 +48,8 @@ export default function StudentTable({ students }: { students: Student[] }) {
         setStudentID(student.studentID);
         setStartTime(student.startTime);
         setEndTime(student.endTime);
-        onOpen()
-    }
+        onOpen();
+    };
 
     const updateStudent = api.student.update.useMutation({
         onSuccess: () => {
@@ -59,51 +58,56 @@ export default function StudentTable({ students }: { students: Student[] }) {
         },
         onError: (error) => {
             toast.error(error.message);
-        }
+        },
     });
 
     const handleUpdate = () => {
         updateStudent.mutate({
             studentID,
             startTime,
-            endTime
-        })
-    }
-    const renderCell = React.useCallback((student: Student, columnKey: keyof Student | "actions") => {
-        const actionsColumn = (
-            <div className="relative flex items-center gap-2">
-                <span className="cursor-pointer text-lg text-default-400 active:opacity-50" onClick={() => handleEdit(student)}>
-                    <MdOutlineEdit />
-                </span>
-                <span
-                    className="cursor-pointer text-lg text-danger active:opacity-50"
-                    onClick={() => deleteStudent.mutate(student.studentID)}
-                >
-                    <MdDeleteOutline />
-                </span>
-            </div>
-        );
-    
-        switch (columnKey) {
-            case "actions":
-                return actionsColumn;
-            default:
-                const cellValue = student[columnKey];
-                return cellValue;
-        }
-    }, [handleEdit, deleteStudent]);
-    
-    
+            endTime,
+        });
+    };
+    const renderCell = React.useCallback(
+        (student: Student, columnKey: keyof Student | "actions") => {
+            const actionsColumn = (
+                <div className="relative flex items-center gap-2">
+                    <span
+                        className="cursor-pointer text-lg text-default-400 active:opacity-50"
+                        onClick={() => handleEdit(student)}
+                    >
+                        <MdOutlineEdit />
+                    </span>
+                    <span
+                        className="cursor-pointer text-lg text-danger active:opacity-50"
+                        onClick={() => deleteStudent.mutate(student.studentID)}
+                    >
+                        <MdDeleteOutline />
+                    </span>
+                </div>
+            );
+
+            switch (columnKey) {
+                case "actions":
+                    return actionsColumn;
+                default:
+                    const cellValue = student[columnKey];
+                    return cellValue;
+            }
+        },
+        [handleEdit, deleteStudent],
+    );
 
     return (
         <div className="">
-
             <Table aria-label="Example table with custom cells" className="">
                 <TableHeader columns={columns}>
                     {(column) => (
                         <TableColumn
                             key={column.uid}
-                            align={column.uid === "actions" ? "center" : "start"}
+                            align={
+                                column.uid === "actions" ? "center" : "start"
+                            }
                         >
                             {column.name}
                         </TableColumn>
@@ -113,7 +117,9 @@ export default function StudentTable({ students }: { students: Student[] }) {
                     {(student) => (
                         <TableRow key={student.id}>
                             {(columnKey: keyof Student | "actions") => (
-                                <TableCell>{renderCell(student, columnKey)}</TableCell>
+                                <TableCell>
+                                    {renderCell(student, columnKey)}
+                                </TableCell>
                             )}
                         </TableRow>
                     )}
@@ -127,7 +133,9 @@ export default function StudentTable({ students }: { students: Student[] }) {
                 <ModalContent>
                     {(onClose) => (
                         <>
-                            <ModalHeader className="flex flex-col gap-1">Edit Student</ModalHeader>
+                            <ModalHeader className="flex flex-col gap-1">
+                                Edit Student
+                            </ModalHeader>
                             <ModalBody>
                                 <div className="grid gap-1">
                                     <p>Start Time</p>
@@ -147,13 +155,20 @@ export default function StudentTable({ students }: { students: Student[] }) {
                                         onValueChange={setEndTime}
                                     />
                                 </div>
-
                             </ModalBody>
                             <ModalFooter>
-                                <Button color="danger" variant="flat" onPress={onClose}>
+                                <Button
+                                    color="danger"
+                                    variant="flat"
+                                    onPress={onClose}
+                                >
                                     Close
                                 </Button>
-                                <Button color="primary" onPress={onClose} onClick={() => handleUpdate()}>
+                                <Button
+                                    color="primary"
+                                    onPress={onClose}
+                                    onClick={() => handleUpdate()}
+                                >
                                     Update
                                 </Button>
                             </ModalFooter>
@@ -161,8 +176,6 @@ export default function StudentTable({ students }: { students: Student[] }) {
                     )}
                 </ModalContent>
             </Modal>
-
-
         </div>
     );
 }
