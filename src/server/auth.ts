@@ -4,10 +4,13 @@ import {
     type DefaultSession,
     type NextAuthOptions,
 } from "next-auth";
-import AzureADProvider from "next-auth/providers/azure-ad";
+// import AzureADProvider from "next-auth/providers/azure-ad";
 
 import { env } from "~/env";
 import { db } from "~/server/db";
+
+import CredentialsProvider from "next-auth/providers/credentials";
+import { api } from "~/trpc/server";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -41,16 +44,34 @@ declare module "next-auth" {
  * @see https://next-auth.js.org/configuration/options
  */
 export const authOptions: NextAuthOptions = {
-    callbacks: {
-        session: ({ session, user }) => ({
-            ...session,
-            user: {
-                ...session.user,
-                id: user.id,
-                role: user.role,
-            },
-        }),
+    session: {
+        strategy: "jwt",
     },
+    callbacks: {
+        async jwt({ token, account, profile }) {
+            if (account && account.type === "credentials") {
+                token.userId = account.providerAccountId;
+            }
+            return token;
+        },
+        async session({ session, token, user }) {
+            session.user.id = token.userId;
+            return session;
+        },
+    },
+    //   pages: {
+    //     signIn: '/signin', //(4) custom signin page path
+    //   },
+    // callbacks: {
+    //     session: ({ session, user }) => ({
+    //         ...session,
+    //         user: {
+    //             ...session.user,
+    //             id: user.id,
+    //             role: user.role,
+    //         },
+    //     }),
+    // },
     adapter: PrismaAdapter(db),
     providers: [
         // AzureADProvider({
@@ -58,6 +79,29 @@ export const authOptions: NextAuthOptions = {
         //     clientSecret: env.AZURE_AD_CLIENT_SECRET ?? "",
         //     tenantId: env.AZURE_AD_TENANT_ID,
         // }),
+
+        CredentialsProvider({
+            name: "Credentials",
+
+            credentials: {
+                username: { label: "Username", type: "text" },
+                password: { label: "Password", type: "password" },
+            },
+            async authorize(credentials, req) {
+                // const user = {name: "J Smith", email: "jsmith@example.com" }
+                const user = await api.user.getUser.query({
+                    name: credentials?.username,
+                    password: credentials?.password,
+                });
+
+                if (user) {
+                    console.log(user);
+                    return user;
+                } else {
+                    return false;
+                }
+            },
+        }),
         /**
          * ...add more providers here.
          *
