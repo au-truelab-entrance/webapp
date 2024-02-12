@@ -7,6 +7,7 @@ export type Student = {
     studentID: number;
     startTime: string;
     endTime: string;
+    [key: number]: string | number | undefined;
 };
 
 export type Analytics = {
@@ -16,6 +17,16 @@ export type Analytics = {
     year2: number | string;
     year3: number | string;
     year4: number | string;
+};
+
+export type UserRole = "admin" | "user";
+
+export type User = {
+    id: string;
+    role: UserRole;
+    name?: string | null | undefined;
+    email?: string | null | undefined;
+    image?: string | null | undefined;
 };
 
 export type HeatMap = [time: Date | string, date: number | string];

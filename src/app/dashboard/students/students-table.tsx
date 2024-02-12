@@ -68,35 +68,35 @@ export default function StudentTable({ students }: { students: Student[] }) {
             endTime,
         });
     };
-    const renderCell = React.useCallback(
-        (student: Student, columnKey: keyof Student | "actions") => {
-            const actionsColumn = (
-                <div className="relative flex items-center gap-2">
-                    <span
-                        className="cursor-pointer text-lg text-default-400 active:opacity-50"
-                        onClick={() => handleEdit(student)}
-                    >
-                        <MdOutlineEdit />
-                    </span>
-                    <span
-                        className="cursor-pointer text-lg text-danger active:opacity-50"
-                        onClick={() => deleteStudent.mutate(student.studentID)}
-                    >
-                        <MdDeleteOutline />
-                    </span>
-                </div>
-            );
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const renderCell = React.useCallback((student: Student, columnKey: any) => {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        const cellValue = student[columnKey];
 
-            switch (columnKey) {
-                case "actions":
-                    return actionsColumn;
-                default:
-                    const cellValue = student[columnKey];
-                    return cellValue;
-            }
-        },
-        [handleEdit, deleteStudent],
-    );
+        switch (columnKey) {
+            case "actions":
+                return (
+                    <div className="relative flex items-center gap-2">
+                        <span
+                            className="cursor-pointer text-lg text-default-400 active:opacity-50"
+                            onClick={() => handleEdit(student)}
+                        >
+                            <MdOutlineEdit />
+                        </span>
+                        <span
+                            className="cursor-pointer text-lg text-danger active:opacity-50"
+                            onClick={() =>
+                                deleteStudent.mutate(student.studentID)
+                            }
+                        >
+                            <MdDeleteOutline />
+                        </span>
+                    </div>
+                );
+            default:
+                return cellValue;
+        }
+    }, []);
 
     return (
         <div className="">
@@ -116,7 +116,7 @@ export default function StudentTable({ students }: { students: Student[] }) {
                 <TableBody items={students}>
                     {(student) => (
                         <TableRow key={student.id}>
-                            {(columnKey: keyof Student | "actions") => (
+                            {(columnKey) => (
                                 <TableCell>
                                     {renderCell(student, columnKey)}
                                 </TableCell>

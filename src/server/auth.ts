@@ -11,6 +11,7 @@ import { db } from "~/server/db";
 
 import CredentialsProvider from "next-auth/providers/credentials";
 import { api } from "~/trpc/server";
+import { User, UserRole } from "~/app/lib/definitions";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -54,10 +55,24 @@ export const authOptions: NextAuthOptions = {
             }
             return token;
         },
-        async session({ session, token, user }) {
-            session.user.id = token.userId;
-            return session;
-        },
+
+        // async signIn({ user, account, profile, email, credentials }) {
+        //     console.log("hello")
+
+        //     if (await api.user.getUser.query({
+        //         name: credentials?.username,
+        //         password: credentials?.password,
+        //     })) {
+        //         return true;
+        //     } else {
+        //         return false;
+        //     }
+        //   },
+
+        // async session({ session, token, user }) {
+        //     session.user.id = token.userId;
+        //     return session;
+        // },
     },
     //   pages: {
     //     signIn: '/signin', //(4) custom signin page path
@@ -87,18 +102,23 @@ export const authOptions: NextAuthOptions = {
                 username: { label: "Username", type: "text" },
                 password: { label: "Password", type: "password" },
             },
-            async authorize(credentials, req) {
+            authorize: async (credentials, _req) => {
                 // const user = {name: "J Smith", email: "jsmith@example.com" }
+                if (credentials === undefined) return null;
                 const user = await api.user.getUser.query({
-                    name: credentials?.username,
-                    password: credentials?.password,
+                    name: credentials.username,
+                    password: credentials.password,
                 });
 
                 if (user) {
-                    console.log(user);
-                    return user;
+                    const mappedUser: User = {
+                        id: user.id,
+                        name: user.name,
+                        role: user.role as UserRole,
+                    };
+                    return mappedUser;
                 } else {
-                    return false;
+                    return null;
                 }
             },
         }),
