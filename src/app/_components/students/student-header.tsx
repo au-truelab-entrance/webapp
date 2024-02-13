@@ -57,7 +57,6 @@ function StudentHeader() {
 
     return (
         <div className="">
-            <h1 className="text-4xl font-bold">Students</h1>
             <div className="my-6 flex items-center">
                 <Button color="primary" className="w-80" onPress={onOpen}>
                     Insert Students
