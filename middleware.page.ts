@@ -1,11 +1,17 @@
-import NextAuth from "next-auth";
+import { NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
 import { authOptions } from "~/server/auth";
+import type { NextApiRequest, NextApiResponse } from "next";
 
-export default NextAuth(authOptions).auth;
-
-console.log("Middleware running")
+console.log("Hello");
+export async function middleware(req: NextApiRequest, res: NextApiResponse) {
+    console.log("Hello");
+    const session = await getServerSession(req, res, authOptions);
+    if (!session?.user) {
+        return NextResponse.redirect(new URL("/", req.url));
+    }
+}
 
 export const config = {
-    // https://nextjs.org/docs/app/building-your-application/routing/middleware#matcher
-    matcher: ["/((?!api|_next/static|_next/image|.*\\.png$).*)"],
+    matcher: ["/dashboard"],
 };

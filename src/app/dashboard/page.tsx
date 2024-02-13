@@ -18,7 +18,6 @@ async function GetAllStudent() {
 
 async function Dashboard() {
     const session = await getServerAuthSession();
-    if (!session?.user) return null;
 
     return (
         <div>

@@ -20,9 +20,10 @@ export default {
             themes: {
                 light: {
                     colors: {
-                        primary: '#000000'
-                    }
-                }
-            }
-        })],
+                        primary: "#000000",
+                    },
+                },
+            },
+        }),
+    ],
 } satisfies Config;

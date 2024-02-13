@@ -70,7 +70,6 @@ const fixFormat = async () => {
 
 export default async function Home() {
     const session = await getServerAuthSession();
-    if (!session?.user) return null;
 
     return (
         <>
