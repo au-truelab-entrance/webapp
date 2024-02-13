@@ -3,6 +3,8 @@ import { api } from "~/trpc/server";
 import type { HeatMap } from "~/app/lib/definitions";
 import TopTenTable from "~/app/_components/top-ten-table";
 
+import { getServerAuthSession } from "~/server/auth";
+
 type GraphData = [
     Date | string,
     number | string,
@@ -67,6 +69,9 @@ const fixFormat = async () => {
 };
 
 export default async function Home() {
+    const session = await getServerAuthSession();
+    if (!session?.user) return null;
+
     return (
         <>
             <PopularGraph data={await fixFormat()} />

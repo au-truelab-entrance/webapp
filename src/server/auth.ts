@@ -57,7 +57,6 @@ export const authOptions: NextAuthOptions = {
         },
 
         // async signIn({ user, account, profile, email, credentials }) {
-        //     console.log("hello")
 
         //     if (await api.user.getUser.query({
         //         name: credentials?.username,

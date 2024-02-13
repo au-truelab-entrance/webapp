@@ -33,7 +33,6 @@ function CSVDashboard() {
         createStudent.mutate(convertedStudentData);
     };
 
-    console.log(studentID);
     const createStudent = api.student.create.useMutation({
         onSuccess: () => {
             router.refresh();
