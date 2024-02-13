@@ -16,9 +16,9 @@ import { api } from "~/trpc/react";
 import { useRouter } from "next/navigation";
 import { Bounce, ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import type { Student } from "../lib/definitions";
+import type { Student } from "../../lib/definitions";
 
-function CSVDashboard() {
+function StudentHeader() {
     const router = useRouter();
     const [studentID, setStudentID] = useState("");
     const [startTime, setStartTime] = useState("");
@@ -148,4 +148,4 @@ function CSVDashboard() {
 }
 
 // Export the Dashboard component
-export default CSVDashboard;
+export default StudentHeader;

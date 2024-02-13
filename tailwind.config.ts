@@ -20,7 +20,10 @@ export default {
             themes: {
                 light: {
                     colors: {
-                        primary: "#000000",
+                        primary: {
+                            DEFAULT: "#000000",
+                            foreground: "#ffffff",
+                        }
                     },
                 },
             },
