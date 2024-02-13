@@ -3,7 +3,7 @@ on:
   schedule:
      # actually, ~5 minutes is the highest
      # effective frequency you will get
-    - cron:  '*/1 * * * *'
+    - cron:  '*/30 * * * *'
 jobs:
   merge:
     runs-on: ubuntu-latest
