@@ -10,7 +10,7 @@ export default async function Students() {
     const students: Student[] = await api.student.getAll.query();
 
     return (
-        <div className="w-full p-6">
+        <div className="w-full">
             <StudentHeader />
             <StudentTable students={students} />
         </div>

@@ -14,7 +14,7 @@ export default async function Layout({
     return (
         <main className="flex">
             <Sidebar />
-            <div className="w-full p-4">{children}</div>
+            <div className="w-full p-6">{children}</div>
         </main>
     );
 }
