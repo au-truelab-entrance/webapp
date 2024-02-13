@@ -6,7 +6,6 @@ async function GetAllStudent() {
     if (!session?.user) return null;
 
     const students = await api.student.getAll.query();
-    console.log(students);
 
     return (
         <div>
@@ -18,6 +17,9 @@ async function GetAllStudent() {
 }
 
 async function Dashboard() {
+    const session = await getServerAuthSession();
+    if (!session?.user) return null;
+
     return (
         <div>
             Dashboard
