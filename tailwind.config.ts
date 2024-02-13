@@ -23,7 +23,7 @@ export default {
                         primary: {
                             DEFAULT: "#000000",
                             foreground: "#ffffff",
-                        }
+                        },
                     },
                 },
             },

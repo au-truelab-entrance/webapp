@@ -11,9 +11,11 @@ import {
 export default function Sidebar() {
     const pathname = usePathname();
     return (
-        <div className="fbg-white sticky top-0 hidden h-screen  w-80 p-4 shadow-small lg:block">
-            <h1 className="flex text-4xl font-bold text-primary ">D*Code</h1>
-            <div className="mt-10 w-full text-white">
+        <div className="fbg-white sticky top-0 hidden h-screen  w-80 shadow-small lg:block">
+            <h1 className="align-center text-d-code flex justify-center border-b border-solid border-[#E2E4EA] p-7 text-4xl font-bold text-primary">
+                D*CODE
+            </h1>
+            <div className="mt-5 w-full p-4 text-white">
                 <Link
                     className={`mt-1 flex h-10 cursor-pointer items-center rounded-lg px-4  ${
                         pathname == "/dashboard"

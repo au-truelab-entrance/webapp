@@ -13,16 +13,12 @@ export default async function Layout({
     if (!session) return redirect("/api/auth/signin");
 
     return (
-
-        <main className='flex min-h-[100dvh]'>
+        <main className="flex min-h-[100dvh]">
             <Sidebar />
-            <div className='w-full bg-[#f8f7fa] p-4'>
+            <div className="w-full bg-[#f8f7fa] p-4">
                 <Topbar />
-                <div className="">
-                    {children}
-                </div>
+                <div className="">{children}</div>
             </div>
-
         </main>
     );
 }

@@ -1,30 +1,16 @@
-import { getServerAuthSession } from "~/server/auth";
-import { api } from "~/trpc/server";
-
-async function GetAllStudent() {
-    const session = await getServerAuthSession();
-    if (!session?.user) return null;
-
-    const students = await api.student.getAll.query();
-
-    return (
-        <div>
-            {students.map((each) => (
-                <p key={each.studentID}>{each.studentID}</p>
-            ))}
-        </div>
-    );
-}
+import NumberAnalytic from "../_components/number-analytic";
 
 async function Dashboard() {
-    const session = await getServerAuthSession();
-
     return (
-        <div>
-            Dashboard
-            {/* <CSVDashboard />
-            <GetAllStudent /> */}
-        </div>
+        <>
+            <div className="flex-start flex gap-1 self-stretch text-xl">
+                Here’s what happening with{" "}
+                <span className="text-d-code font-bold">D* CODE</span>
+            </div>
+            <div className="flex-start flex gap-[20px] self-stretch">
+                <NumberAnalytic />
+            </div>
+        </>
     );
 }
 
