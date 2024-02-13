@@ -17,7 +17,7 @@ import {
 import { usePathname } from "next/navigation";
 import React, { useState } from "react";
 
-type Props = {};
+type Props = NonNullable<unknown>;
 
 export default function Topbar({}: Props) {
     const pathname = usePathname();
