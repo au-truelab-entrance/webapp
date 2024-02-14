@@ -56,6 +56,10 @@ export const authOptions: NextAuthOptions = {
             return token;
         },
 
+        async redirect({ baseUrl }) {
+            return `${baseUrl}/dashboard`;
+        },
+
         // async signIn({ user, account, profile, email, credentials }) {
 
         //     if (await api.user.getUser.query({
@@ -73,9 +77,9 @@ export const authOptions: NextAuthOptions = {
         //     return session;
         // },
     },
-    //   pages: {
-    //     signIn: '/signin', //(4) custom signin page path
-    //   },
+    // pages: {
+    //   signIn: '/',
+    // },
     // callbacks: {
     //     session: ({ session, user }) => ({
     //         ...session,

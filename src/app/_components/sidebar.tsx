@@ -6,6 +6,7 @@ import {
     IoAnalyticsOutline,
     IoGridOutline,
     IoPeopleOutline,
+    IoLogOutOutline,
 } from "react-icons/io5";
 
 export default function Sidebar() {
@@ -48,6 +49,17 @@ export default function Sidebar() {
                 >
                     <IoAnalyticsOutline size={24} />
                     <h1 className="ml-2 flex">Analytics</h1>
+                </Link>
+                <Link
+                    className={`mt-1 flex h-10 cursor-pointer items-center rounded-lg px-4  ${
+                        pathname == "/api/auth/signout"
+                            ? "bg-primary text-white "
+                            : "text-foreground transition-background hover:bg-black hover:bg-opacity-5"
+                    }`}
+                    href="/api/auth/signout"
+                >
+                    <IoLogOutOutline size={24} />
+                    <h1 className="ml-2 flex">Log out</h1>
                 </Link>
             </div>
         </div>
