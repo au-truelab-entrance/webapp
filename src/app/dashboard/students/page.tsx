@@ -1,5 +1,5 @@
-import StudentHeader from "../../_components/students/student-header";
 import { api } from "~/trpc/server";
+import StudentHeader from "../../_components/students/student-header";
 import StudentTable from "../../_components/students/students-table";
 import type { Student } from "~/app/lib/definitions";
 

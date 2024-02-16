@@ -5,7 +5,7 @@ import { Chart } from "react-google-charts";
 import type { HeatMap } from "../lib/definitions";
 
 export const options = {
-    title: "Popular time",
+    title: "",
 };
 
 export default function PopularGraph({ data }: { data: HeatMap[] }) {
